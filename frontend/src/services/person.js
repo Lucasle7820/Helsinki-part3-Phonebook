@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = `${import.meta.env.VITE_API_URL}/persons`
+const baseUrl = `${import.meta.env.VITE_API_URL}/api/persons`
 
 
 const getAll = () => {
