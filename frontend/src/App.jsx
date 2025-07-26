@@ -59,7 +59,7 @@ const App = () => {
         setPersons(initialPersons);
       })
       .catch(err => {
-        setError(err);
+        setNoti({ message: 'Failed to load contacts', type: 'error' })
       });
   }, []); 
 
@@ -67,9 +67,14 @@ const App = () => {
   const handleAdd = (e) => {
     e.preventDefault();
 
-    const exist = persons.find(
-      person => person.name.toLowerCase() === newPerson.name.toLowerCase()
-    );
+  // normalize the new name
+  const newName = (newPerson.name || '').trim().toLowerCase()
+
+  // find any existing person whose name matches (case‑insensitive)
+  const exist = (persons || []).find(person => {
+    const name = (person.name || '').toLowerCase()
+    return name === newName
+  })
 
     if (exist) {
       const confirmUpdate = window.confirm(
@@ -103,11 +108,16 @@ const App = () => {
         number: newPerson.number,
       };
 
-      personService.create(newPersonObj).then(returnedNew => {
-        setPersons([...persons, returnedNew]);
-        setNewPerson({ name: '', number: '' });
-        setNoti({ message: `Added ${newPerson.name}`, type: 'success' })
-      });
+      personService
+        .create(newPersonObj)
+        .then(returnedNew => {
+          setPersons([...persons, returnedNew]);
+          setNewPerson({ name: '', number: '' });
+          setNoti({ message: `Added ${newPerson.name}`, type: 'success' });
+        })
+        .catch(error => {
+          setNoti({ message: error.response.data.error, type: 'error' });
+        });
     }
   };
 
@@ -126,10 +136,13 @@ const App = () => {
   };
 
 
-  const filteredPersons = useMemo(() =>
-    persons.filter(person =>
-      person.name.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [persons, searchQuery])
+  const filteredPersons = useMemo(() => {
+    const term = (searchQuery || '').toLowerCase()
+    return (persons || []).filter(person => {
+      const name = (person.name || '').toLowerCase()
+      return name.includes(term)
+    })
+  }, [persons, searchQuery])
 
 
   return (
