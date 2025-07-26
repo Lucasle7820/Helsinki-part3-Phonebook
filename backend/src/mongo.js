@@ -4,7 +4,7 @@ dotenv.config({
   path: new URL('../.env', import.meta.url).pathname
 })
 
-const url = process.env.MONGODB_URI;
+const url = process.env.MONGODB_URI
 mongoose.set('strictQuery',false)
 
 mongoose.connect(url)

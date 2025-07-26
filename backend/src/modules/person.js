@@ -12,12 +12,12 @@ const personSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function (v) {
-        return /^\d{2,3}-\d+$/.test(v) && v.length >= 8;
+        return /^\d{2,3}-\d+$/.test(v) && v.length >= 8
       },
       message: props => `${props.value} is not a valid phone number!`
     }
   }
-});
+})
 
 personSchema.set('toJSON', {
   transform(doc, ret) {
@@ -29,4 +29,4 @@ personSchema.set('toJSON', {
 
 const Person = mongoose.model('Person', personSchema)
 
-export default Person;
+export default Person

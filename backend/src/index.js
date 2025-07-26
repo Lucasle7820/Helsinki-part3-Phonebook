@@ -1,14 +1,14 @@
-import express from 'express';
-import morgan from 'morgan';
-import cors from 'cors';
-import Person from './modules/person.js';
-import './mongo.js';
+import express from 'express'
+import morgan from 'morgan'
+import cors from 'cors'
+import Person from './modules/person.js'
+import './mongo.js'
 
 const app = express()
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001
 
 
-app.use(cors());
+app.use(cors())
 app.use(express.json())
 
 morgan.token('body', (req) => {
@@ -22,7 +22,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 app.get('/api/persons', async (req, res, next) => {
   try {
     const people = await Person.find({})
-    res.json(people)    
+    res.json(people)
   } catch (err) {
     next(err)
   }
